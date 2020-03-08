@@ -9,7 +9,12 @@ jobs:
       PIPENV_VENV_IN_PROJECT: true
     steps:
       - checkout
-      - restore_cache: pipfile-lock-{{ checksum "Pipfile.lock" }}
+      - restore_cache:
+        keys:
+          # when lock file changes, use increasingly general patterns to restore cache
+          - pip-packages-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          - pip-packages-v1-{{ .Branch }}-
+          - pip-packages-v1-
       - run:
           name: install pipenv
           command: pip install pipenv --upgrade
@@ -20,8 +25,9 @@ jobs:
           name: Run tests
           command: pipenv run python -m pytest tests
       - save_cache:
-          key: pipfile-lock-{{ checksum "Pipfile.lock" }}
-          paths: .venv
+          paths:
+            - .venv
+          key: pip-packages-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 
 workflows:
   main:
