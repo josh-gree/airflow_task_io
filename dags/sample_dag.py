@@ -1,27 +1,32 @@
+"""
+[t1a] -> [t2a]
+[t1b] -> [t2b]
+
+Example of using PythonIoOperator;
+
+The tasks t2{a,b} take as kwargs x, y returned from t1{a,b} respectively.
+
+Storage method (S3, Local, Redis) specified in default_args!
+"""
+# pylint: disable=pointless-statement,invalid-name,import-error
 import logging
+from typing import Any, Dict
 
 import pandas as pd
-
-from typing import Dict, Any
-
 from airflow import DAG
 from airflow.hooks.S3_hook import S3Hook
 
 from src.python_io_operator import PythonIoOperator
-from src.storage import S3Storage, LocalStorage, RedisStorage
+from src.storage import LocalStorage, RedisStorage, S3Storage
 
-# constructing the various storage classes that can be
-# used by PythonIoOperator...
+LOCAL_STORAGE = LocalStorage("./storage")
+S3_STORAGE = S3Storage("bobs-special-bucket", S3Hook())
+REDIS_STORAGE = RedisStorage(host="redis", port=6379, db=0)
 
-local_storage = LocalStorage("./storage")
-s3_storage = S3Storage("bobs-special-bucket", S3Hook())
-redis_storage = RedisStorage(host="redis", port=6379, db=0)
-# local_pandas_csv_storage = LocalPandasCSVStorage("./storage")
-
-args = {
+DEFAULT_ARGS = {
     "owner": "airflow",
     "start_date": "2020-01-01",
-    "storage": s3_storage,
+    "storage": S3_STORAGE,
 }
 
 
@@ -45,7 +50,7 @@ def t1_callable_pandas(*, k: int) -> Dict[str, int]:
     """
     Sample function. Returns a dict with two largish pandas dfs
     consiting of random vals scaled by k
-    
+
     Args:
         k (int): scaling value
     """
@@ -59,7 +64,7 @@ def t1_callable_pandas(*, k: int) -> Dict[str, int]:
 def t1_callable(*, k: int) -> Dict[str, int]:
     """
     Sample function. Returns a dict with two ints 10k and 100k
-    
+
     Args:
         k (int): value to be scaled
     """
@@ -78,17 +83,7 @@ def t2_callable(*, x: Any, y: Any) -> Dict[str, Any]:
     return {"sum": x + y}
 
 
-with DAG(dag_id="dag", default_args=args, schedule_interval=None) as dag:
-    """
-    [t1a] -> [t2a]
-    [t1b] -> [t2b]
-
-    Example of using PythonIoOperator;
-
-    The tasks t2{a,b} take as kwargs x, y returned from t1{a,b} respectively.
-
-    Storage method (S3, Local, Redis) specified in default_args!
-    """
+with DAG(dag_id="dag", default_args=DEFAULT_ARGS, schedule_interval=None) as dag:
     t1a = PythonIoOperator(
         task_id="t1a", python_callable=t1_callable_pandas, op_kwargs={"k": 42}
     )

@@ -1,27 +1,32 @@
-import cloudpickle
+"""
+[summary]
+"""
+# pylint: disable=arguments-differ
 import pickle
-import redis
-
-import pandas as pd
-
-from typing import Dict, Any, Callable
-from pathlib import Path
-
-
 from abc import ABC, abstractmethod
+from pathlib import Path
+from typing import Any, Dict
+
+import cloudpickle
+import redis
 
 
 class Storage(ABC):
+    # TODO
+    """
+    [summary]
+    """
+
     @abstractmethod
     def store_return_value(self, *, return_value: Dict[str, Any]) -> None:
         # TODO
         """
         [summary]
-        
+
         Args:
             ABC ([type]): [description]
             return_value (Dict[str, Any]): [description]
-        
+
         Raises:
             NotImplementedError: [description]
         """
@@ -32,13 +37,13 @@ class Storage(ABC):
         # TODO
         """
         [summary]
-        
+
         Args:
             input_name (str): [description]
-        
+
         Raises:
             NotImplementedError: [description]
-        
+
         Returns:
             Dict[str, Any]: [description]
         """
@@ -47,19 +52,31 @@ class Storage(ABC):
     # TODO
     @abstractmethod
     def get_output_name(self):
+        # TODO
+        """
+        [summary]
+        """
         raise NotImplementedError
 
     @abstractmethod
     def get_input_name(self):
+        # TODO
+        """
+        [summary]
+        """
         raise NotImplementedError
 
 
 class LocalStorage(Storage):
+    """
+    [summary]
+    """
+
     def __init__(self, storage_location):
         # TODO
         """
         [summary]
-        
+
         Args:
             Storage ([type]): [description]
             storage_location ([type]): [description]
@@ -75,14 +92,14 @@ class LocalStorage(Storage):
         # TODO
         """
         [summary]
-        
+
         Args:
             return_value (Dict[str, Any]): [description]
             output_name (str): [description]
-        
+
         Raises:
             ValueError: [description]
-        
+
         Returns:
             [type]: [description]
         """
@@ -99,14 +116,14 @@ class LocalStorage(Storage):
         # TODO
         """
         [summary]
-        
+
         Args:
             input_name (str): [description]
-        
+
         Raises:
             ValueError: [description]
             ValueError: [description]
-        
+
         Returns:
             Dict[str, Any]: [description]
         """
@@ -126,18 +143,23 @@ class LocalStorage(Storage):
 
     # TODO
     def get_input_name(self):
-        return super().get_input_name()
+        pass
 
     def get_output_name(self):
-        return super().get_output_name()
+        pass
 
 
 class S3Storage(Storage):
+    # TODO
+    """
+    [summary]
+    """
+
     def __init__(self, storage_bucket, s3_hook):
         # TODO
         """
         [summary]
-        
+
         Args:
             Storage ([type]): [description]
             storage_bucket ([type]): [description]
@@ -152,12 +174,12 @@ class S3Storage(Storage):
     ) -> None:
         # TODO
         """
-        Stores the return value of the python callable to S3                
-        
+        Stores the return value of the python callable to S3
+
         Args:
             return_value (Dict[str, Any]): Return value of the python callable
             output_name (str): The S3 object name where python callable return value is stored.
-        
+
         Raises:
             ValueError: When return value is not able to be pickled!
         """
@@ -177,14 +199,14 @@ class S3Storage(Storage):
         # TODO
         """
         Load object from S3 and unpickle! Make sure the object is a python dict!
-        
+
         Args:
             input_name (str): The S3 object name where input kwargs are loaded from.
-        
+
         Raises:
             ValueError: When unable to unpickle object from S3
             ValueError: When loaded object from S3 is not a python dict
-        
+
         Returns:
             Dict[str, Any]: Dict loaded from S3 will be used as kwargs to python callable
         """
@@ -205,18 +227,23 @@ class S3Storage(Storage):
 
     # TODO
     def get_input_name(self):
-        return super().get_input_name()
+        pass
 
     def get_output_name(self):
-        return super().get_output_name()
+        pass
 
 
 class RedisStorage(Storage):
+    # TODO
+    """
+    [summary]
+    """
+
     def __init__(self, host, port, db):
         # TODO
         """
         [summary]
-        
+
         Args:
             Storage ([type]): [description]
             host ([type]): [description]
@@ -233,14 +260,14 @@ class RedisStorage(Storage):
         # TODO
         """
         [summary]
-        
+
         Args:
             return_value (Dict[str, Any]): [description]
             output_name (str): [description]
-        
+
         Raises:
             ValueError: [description]
-        
+
         Returns:
             [type]: [description]
         """
@@ -249,27 +276,27 @@ class RedisStorage(Storage):
         except Exception as e:
             raise ValueError("Unable to pickle return value - raised exception: {e}")
 
-        r = redis.Redis(host=self.host, port=self.port, db=self.db)
-        r.set(output_name, pickled_return_value)
+        redis_client = redis.Redis(host=self.host, port=self.port, db=self.db)
+        redis_client.set(output_name, pickled_return_value)
 
     def load_inputs(self, *, input_name: str) -> Dict[str, Any]:
         # TODO
         """
         [summary]
-        
+
         Args:
             input_name (str): [description]
-        
+
         Raises:
             ValueError: [description]
             ValueError: [description]
-        
+
         Returns:
             Dict[str, Any]: [description]
         """
         try:
-            r = redis.Redis(host=self.host, port=self.port, db=self.db)
-            value = r.get(input_name)
+            redis_client = redis.Redis(host=self.host, port=self.port, db=self.db)
+            value = redis_client.get(input_name)
             op_kwargs = pickle.loads(value)
         except pickle.UnpicklingError:
             raise ValueError("Unable to load s3 object!")
@@ -283,8 +310,7 @@ class RedisStorage(Storage):
 
     # TODO
     def get_input_name(self):
-        return super().get_input_name()
+        pass
 
     def get_output_name(self):
-        return super().get_output_name()
-
+        pass
