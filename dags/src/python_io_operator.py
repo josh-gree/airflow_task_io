@@ -1,5 +1,5 @@
 """
-TODO
+TODO - DOCS
 [summary]
 """
 # pylint: disable=arguments-differ
@@ -9,7 +9,7 @@ from airflow.utils.decorators import apply_defaults
 
 
 class PythonIoOperator(PythonOperator):
-    # TODO
+    # TODO - DOCS
     """
     [summary]
     """
@@ -24,7 +24,7 @@ class PythonIoOperator(PythonOperator):
         storage=None,
         **kwargs,
     ):
-        # TODO
+        # TODO - DOCS
         """
         [summary]
 
@@ -50,7 +50,7 @@ class PythonIoOperator(PythonOperator):
 
         We also call method to store return value here before actually returning anything.
         """
-        # TODO
+        # TODO - EXTEND
         # delegate to storage
         # input_name, output_name = self.storage.get_names(context)
 

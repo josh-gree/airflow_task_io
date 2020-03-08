@@ -1,4 +1,5 @@
 """
+TODO - DOCS
 [summary]
 """
 # pylint: disable=arguments-differ
@@ -12,14 +13,14 @@ import redis
 
 
 class Storage(ABC):
-    # TODO
+    # TODO - DOCS
     """
     [summary]
     """
 
     @abstractmethod
     def store_return_value(self, *, return_value: Dict[str, Any]) -> None:
-        # TODO
+        # TODO - DOCS
         """
         [summary]
 
@@ -34,7 +35,7 @@ class Storage(ABC):
 
     @abstractmethod
     def load_inputs(self, *, input_name: str) -> Dict[str, Any]:
-        # TODO
+        # TODO - DOCS
         """
         [summary]
 
@@ -49,10 +50,10 @@ class Storage(ABC):
         """
         raise NotImplementedError
 
-    # TODO
+    # TODO - EXTEND
     @abstractmethod
     def get_output_name(self):
-        # TODO
+        # TODO - DOCS
         """
         [summary]
         """
@@ -60,7 +61,7 @@ class Storage(ABC):
 
     @abstractmethod
     def get_input_name(self):
-        # TODO
+        # TODO - DOCS
         """
         [summary]
         """
@@ -68,12 +69,13 @@ class Storage(ABC):
 
 
 class LocalStorage(Storage):
+    # TODO - DOCS
     """
     [summary]
     """
 
     def __init__(self, storage_location):
-        # TODO
+        # TODO - DOCS
         """
         [summary]
 
@@ -89,7 +91,7 @@ class LocalStorage(Storage):
     def store_return_value(
         self, *, return_value: Dict[str, Any], output_name: str
     ) -> None:
-        # TODO
+        # TODO - DOCS
         """
         [summary]
 
@@ -113,7 +115,7 @@ class LocalStorage(Storage):
             f.write(pickled_return_value)
 
     def load_inputs(self, *, input_name: str) -> Dict[str, Any]:
-        # TODO
+        # TODO - DOCS
         """
         [summary]
 
@@ -141,7 +143,7 @@ class LocalStorage(Storage):
 
         return op_kwargs
 
-    # TODO
+    # TODO - EXTEND
     def get_input_name(self):
         pass
 
@@ -150,13 +152,13 @@ class LocalStorage(Storage):
 
 
 class S3Storage(Storage):
-    # TODO
+    # TODO - DOCS
     """
     [summary]
     """
 
     def __init__(self, storage_bucket, s3_hook):
-        # TODO
+        # TODO - DOCS
         """
         [summary]
 
@@ -172,7 +174,7 @@ class S3Storage(Storage):
     def store_return_value(
         self, *, return_value: Dict[str, Any], output_name: str
     ) -> None:
-        # TODO
+        # TODO - DOCS
         """
         Stores the return value of the python callable to S3
 
@@ -196,7 +198,7 @@ class S3Storage(Storage):
         )
 
     def load_inputs(self, *, input_name: str) -> Dict[str, Any]:
-        # TODO
+        # TODO - DOCS
         """
         Load object from S3 and unpickle! Make sure the object is a python dict!
 
@@ -225,7 +227,7 @@ class S3Storage(Storage):
 
         return op_kwargs
 
-    # TODO
+    # TODO - EXTEND
     def get_input_name(self):
         pass
 
@@ -234,13 +236,13 @@ class S3Storage(Storage):
 
 
 class RedisStorage(Storage):
-    # TODO
+    # TODO - DOCS
     """
     [summary]
     """
 
     def __init__(self, host, port, db):
-        # TODO
+        # TODO - DOCS
         """
         [summary]
 
@@ -257,7 +259,7 @@ class RedisStorage(Storage):
     def store_return_value(
         self, *, return_value: Dict[str, Any], output_name: str
     ) -> None:
-        # TODO
+        # TODO - DOCS
         """
         [summary]
 
@@ -280,7 +282,7 @@ class RedisStorage(Storage):
         redis_client.set(output_name, pickled_return_value)
 
     def load_inputs(self, *, input_name: str) -> Dict[str, Any]:
-        # TODO
+        # TODO - DOCS
         """
         [summary]
 
@@ -308,7 +310,7 @@ class RedisStorage(Storage):
 
         return op_kwargs
 
-    # TODO
+    # TODO - EXTEND
     def get_input_name(self):
         pass
 
