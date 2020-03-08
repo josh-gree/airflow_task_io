@@ -26,7 +26,7 @@ REDIS_STORAGE = RedisStorage(host="redis", port=6379, db=0)
 DEFAULT_ARGS = {
     "owner": "airflow",
     "start_date": "2020-01-01",
-    "storage": S3_STORAGE,
+    "storage": LOCAL_STORAGE,
 }
 
 
@@ -83,7 +83,7 @@ def t2_callable(*, x: Any, y: Any) -> Dict[str, Any]:
     return {"sum": x + y}
 
 
-with DAG(dag_id="dag", default_args=DEFAULT_ARGS, schedule_interval=None) as dag:
+with DAG(dag_id="sample_dag", default_args=DEFAULT_ARGS, schedule_interval=None) as dag:
     t1a = PythonIoOperator(
         task_id="t1a", python_callable=t1_callable_pandas, op_kwargs={"k": 42}
     )
