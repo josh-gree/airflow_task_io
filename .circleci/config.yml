@@ -11,7 +11,6 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            # when lock file changes, use increasingly general patterns to restore cache
             - pip-packages-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
             - pip-packages-v1-{{ .Branch }}-
             - pip-packages-v1-
@@ -21,6 +20,12 @@ jobs:
       - run:
           name: install deps from lockfile
           command: pipenv install --dev --deploy
+      - run:
+          name: check formatting
+          command: pipenv run black --check .
+      - run:
+          name: run linter
+          command: pipenv run pylint --rcfile=.pylintrc dags
       - run:
           name: Run tests
           command: pipenv run python -m pytest tests
