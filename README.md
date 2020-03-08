@@ -39,3 +39,5 @@ To try with Redis - swap the storage class in `DEFAULT_ARGS` in `dags/sample_dag
 ```
 
 Then should see some new keys in redis!
+
+To try with S3 - swap the storage class in `DEFAULT_ARGS` in `dags/sample_dag.py` to `S3_STORAGE`. Need to add aws secrets to .env file and also update the construction of the storage with a bucket name that is accessible! Then trigger the DAG again but with a new execution date (the `-e` flag).
