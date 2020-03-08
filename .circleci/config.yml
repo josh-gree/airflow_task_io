@@ -1,21 +1,22 @@
 version: 2.1
 
-orbs:
-  python: circleci/python@0.2.1
-
 jobs:
   build-and-test:
-    executor:
-      name: python/default
-      tag: 3.7.6
+    docker:
+      - image: circleci/python:3.7.6
+    environment:
+      AIRFLOW_HOME: ./airflow
     steps:
       - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
       - run:
-          command: python -m pytest tests
-          name: Test
+          name: install pipenv
+          command: pip install pipenv --upgrade
+      - run:
+          name: install deps from lockfile
+          command: pipenv install --dev --deploy
+      - run:
+          name: Run tests
+          command: pipenv run python -m pytest tests
 
 workflows:
   main:
