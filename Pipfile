@@ -7,7 +7,6 @@ verify_ssl = true
 black = "==19.10b0"
 pytest = "*"
 ipython = "*"
-mypy = "*"
 
 [packages]
 apache-airflow = "==1.10.9"
