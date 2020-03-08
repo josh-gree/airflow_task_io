@@ -132,40 +132,6 @@ class LocalStorage(Storage):
         return super().get_output_name()
 
 
-# TODO
-class LocalPandasCSVStorage(Storage):
-    def __init__(self, storage_location):
-
-        storage_location = Path(storage_location)
-        storage_location.mkdir(parents=True, exist_ok=True)
-
-        self.storage_location = storage_location
-
-    def store_return_value(
-        self, *, return_value: Dict[str, pd.DataFrame], output_name: str
-    ) -> None:
-        for key, df in return_value.items():
-            print("saving DFF!")
-            f = self.storage_location / f"{output_name}_{key}.csv"
-            df.to_csv(str(f), index=False)
-
-    def load_inputs(self, *, input_name: str) -> Dict[str, pd.DataFrame]:
-
-        csvs = self.storage_location.glob(f"{input_name}_*.csv")
-        keys = [str(csv).split(".")[0].split("_")[-1] for csv in csvs]
-        print(keys)
-        # dfs = {key: pd.read_csv(str(csv)) for csv, key in zip(csvs, keys)}
-
-        print(dfs)
-
-    # TODO
-    def get_input_name(self):
-        return super().get_input_name()
-
-    def get_output_name(self):
-        return super().get_output_name()
-
-
 class S3Storage(Storage):
     def __init__(self, storage_bucket, s3_hook):
         # TODO
