@@ -10,7 +10,7 @@ ipython = "*"
 pylint = "*"
 
 [packages]
-apache-airflow = "==1.10.9"
+apache-airflow = "==2.3.4"
 cloudpickle = "*"
 pandas = "*"
 botocore = "*"
